@@ -1,0 +1,320 @@
+✅ PRACTICAL 1
+🔧 Initialize Git repo, create branches, merge, resolve conflict
+⚙️ STEP 0 — Setup (DO FIRST)
+git config --global user.name "YourName"
+git config --global user.email "your@email.com"
+
+📁 STEP 1 — Create Project Folder
+mkdir git-practical
+cd git-practical
+
+🔹 STEP 2 — Initialize Git
+git init
+👉 Creates hidden .git folder (repository initialized)
+
+📄 STEP 3 — Create File
+echo "Hello DevOps" > file.txt
+
+📌 STEP 4 — Add & Commit
+git add file.txt
+git commit -m "Initial commit"
+
+🌿 STEP 5 — Create Branch
+git branch feature1
+👉 Creates new branch
+
+🔄 STEP 6 — Switch Branch
+git checkout feature1
+(OR)
+git switch feature1
+
+✏️ STEP 7 — Modify File in feature1
+echo "Feature1 change" >> file.txt
+
+💾 STEP 8 — Commit in feature branch
+git add .
+git commit -m "Feature1 update"
+
+🔙 STEP 9 — Switch back to master
+git checkout master
+
+🔀 STEP 10 — Merge feature branch
+git merge feature1
+👉 If no conflict → merged successfully
+
+⚠️ STEP 11 — Create MERGE CONFLICT (IMPORTANT)
+👉 In master branch
+echo "Master version" > file.txt
+git commit -am "Master change"
+👉 Switch to feature branch
+git checkout feature1
+echo "Feature version" > file.txt
+git commit -am "Feature change"
+
+🔥 STEP 12 — Merge again (conflict happens)
+git checkout master
+git merge feature1
+
+❌ You will see conflict like:
+<<<<<<< HEAD
+Master version
+=======
+Feature version
+>>>>>>> feature1
+
+✅ STEP 13 — Resolve Conflict
+👉 Open file and edit:
+Master version
+Feature version
+
+💾 STEP 14 — Final Commit
+git add file.txt
+git commit -m "Conflict resolved"
+
+🎯 FINAL OUTPUT (WHAT YOU SHOW EXAMINER)
+Run:
+git log --oneline
+👉 Shows all commits
+
+✅ PRACTICAL 2
+🔧 Write an Ansible Playbook to Install & Configure Web Server
+
+
+⚙️ STEP 0 — Open Linux (WSL / Ubuntu)
+👉 Start Ubuntu terminal
+
+⚙️ STEP 1 — Install Ansible
+sudo apt update
+sudo apt install ansible -y
+
+✅ Verify installation
+ansible --version
+
+📁 STEP 2 — Create Working Directory
+mkdir ansible-practical
+cd ansible-practical
+
+📄 STEP 3 — Create Inventory File
+👉 Inventory defines target system
+nano inventory
+👉 Add this:
+localhost ansible_connection=local
+👉 Save: CTRL + X → Y → Enter
+
+📜 STEP 4 — Create Playbook
+nano webserver.yml
+
+✍️ WRITE THIS PLAYBOOK (IMPORTANT)
+---
+- name: Install and configure Apache
+  hosts: localhost
+  become: yes
+
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Start Apache service
+      service:
+        name: apache2
+        state: started
+
+    - name: Enable Apache on boot
+      service:
+        name: apache2
+        enabled: yes
+
+    - name: Create index.html
+      copy:
+        content: "<h1>DevOps Practical Success</h1>"
+        dest: /var/www/html/index.html
+
+▶️ STEP 5 — Run Playbook
+ansible-playbook -i inventory webserver.yml
+
+✅ EXPECTED OUTPUT
+You will see:
+TASK [Install Apache] → ok/changed  
+TASK [Start Apache] → ok  
+TASK [Create index.html] → changed  
+
+🌐 STEP 6 — Verify in Browser
+👉 Open browser and go to:
+http://localhost
+👉 Output:
+DevOps Practical Success
+
+🔍 STEP 7 — Verify using command (optional)
+curl http://localhost
+
+
+✅ PRACTICAL 3
+🔧 Clone GitHub Repo → Make Changes → Commit → Push → Rollback
+
+⚙️ STEP 0 — REQUIREMENT
+👉 You must have a GitHub repo (empty or existing)
+Example:
+https://github.com/username/devops-repo.git
+📥 STEP 1 — Clone Repository
+git clone https://github.com/username/devops-repo.git
+
+📁 STEP 2 — Go Inside Folder
+cd devops-repo
+
+📌 STEP 4 — Add & Commit
+🚀 STEP 5 — Push to GitHub
+git push origin master
+👉 Now code is uploaded to GitHub
+
+✏️ STEP 6 — Make Another Change
+echo "Second change" >> file.txt
+git commit -m "Second update"
+
+🚀 STEP 8 — Push Again
+git push origin master
+
+🔍 STEP 9 — Check Commit History
+git log --oneline
+👉 Example output:
+a1b2c3 Second update
+d4e5f6 Added file.txt
+
+🔁 STEP 10 — ROLLBACK (VERY IMPORTANT)
+Method 1: Soft Reset (keeps changes)
+git reset --soft HEAD~1
+👉 Removes last commit, keeps file changes
+
+Method 2: Hard Reset (FULL ROLLBACK)
+git reset --hard HEAD~1
+👉 Deletes:
+last commit
+last changes
+
+⚠️ STEP 11 — Push After Rollback (IMPORTANT)
+git push origin master --force
+👉 Required after reset
+
+🔁 ALTERNATIVE (SAFER METHOD)
+Revert commit (recommended in real projects)
+git revert HEAD
+👉 Creates new commit that undoes changes
+
+🎯 FINAL VERIFICATION
+git log --oneline
+👉 Last commit should be removed or reve
+
+Got it — I’ll give Practical 4 again (clean + corrected + exam-ready) including the fix for your error.
+
+✅ PRACTICAL 4 (REVISED)
+
+⚙️ STEP 1 — Go to folder
+cd ~/ansible-practical
+
+📄 STEP 2 — Create/Update Playbook
+nano docker.yml
+
+✍️ WRITE THIS (UPDATED & SAFE VERSION)
+---
+- name: Install Docker and run container
+  hosts: localhost
+  become: yes
+
+  tasks:
+    - name: Update packages
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+
+    - name: Enable Docker service
+      service:
+        name: docker
+        enabled: yes
+
+    - name: Pull nginx image
+      command: docker pull nginx
+
+    - name: Run nginx container
+      command: docker run -d -p 8080:80 nginx
+
+▶️ STEP 3 — RUN PLAYBOOK (IMPORTANT FIX)
+ansible-playbook -i inventory docker.yml --ask-become-pass
+👉 Enter your password when asked
+
+✅ EXPECTED OUTPUT
+You should see:
+TASK [Install Docker] → changed
+TASK [Start Docker service] → ok
+TASK [Run nginx container] → changed
+
+🌐 STEP 4 — VERIFY
+Option 1 (browser)
+http://localhost:8080
+👉 Nginx page should open
+
+Option 2 (terminal)
+docker ps
+👉 Container should be running
+
+
+✅ PRACTICAL 5
+🔧 Git Branching Strategy (Feature Branch Workflow)
+
+🎯 AIM
+Implement:
+main branch
+feature branch
+merge workflow
+
+📁 STEP 1 — Create Repo
+mkdir git-workflow
+cd git-workflow
+git init
+
+📄 STEP 2 — Create Base File
+echo "Main code" > app.txt
+git add .
+git commit -m "Initial commit"
+
+🌿 STEP 3 — Create Feature Branch
+git checkout -b feature-login
+
+✏️ STEP 4 — Work on Feature
+echo "Login feature added" >> app.txt
+git add .
+git commit -m "Added login feature"
+
+🔙 STEP 5 — Switch to Main
+git checkout master
+
+🔀 STEP 6 — Merge Feature
+git merge feature-login
+
+🧹 STEP 7 — Delete Feature Branch
+git branch -d feature-login
+
+📊 STEP 8 — View Graph (IMPORTANT)
+git log --oneline --graph
+
+🎯 WORKFLOW DIAGRAM (WRITE IF ASKED)
+main → create feature → develop → merge → delet
+
+💾 STEP 7 — Commit Again
+git add .
+git add file.txt
+git commit -m "Added file.txt"
+
+
+📄 STEP 3 — Create / Modify File
+echo "First change" > file.txt
+
