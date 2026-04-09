@@ -515,3 +515,220 @@ Build Now
 📊 STEP 4 — View Output
 
 👉 Click build → Console Output
+
+journal practs 
+Practical 9 
+
+
+# 🔥 WHERE TO RUN ALL COMMANDS
+
+👉 Use **Terminal / PowerShell / WSL / Git Bash**
+
+
+# =========================
+
+# ✅ PART A — INSTALLATION
+
+
+
+## 🔧 Step 1: Install kubectl
+
+👉 Run in terminal:
+
+```bash
+curl -LO "https://dl.k8s.io/release/v1.29.0/bin/windows/amd64/kubectl.exe"
+```
+
+Move it:
+
+```bash
+mkdir C:\kubectl
+move kubectl.exe C:\kubectl\
+```
+
+Add to PATH:
+
+```bash
+setx PATH "%PATH%;C:\kubectl"
+```
+
+---
+
+## 🔧 Step 2: Ensure Docker, WSL, kubectl
+
+### Check Docker:
+
+```bash
+docker --version
+```
+
+### Check WSL:
+
+```bash
+wsl --status
+```
+
+### Check kubectl:
+
+```bash
+kubectl version --client
+```
+
+---
+
+## 🔧 Step 3: Install Minikube
+
+```bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-windows-amd64.exe
+```
+
+Rename:
+
+```bash
+rename minikube-windows-amd64.exe minikube.exe
+```
+
+Move:
+
+```bash
+move minikube.exe C:\kubectl\
+```
+
+---
+
+## 🔧 Step 4: Verify Minikube
+
+```bash
+minikube version
+```
+
+---
+
+# =========================
+
+# ✅ PART B — CLUSTER
+
+# =========================
+
+---
+
+## 🚀 Step 1: Start Cluster
+
+```bash
+minikube start
+```
+
+👉 This creates Kubernetes cluster
+
+---
+
+## 🔍 Step 2: Verify Cluster
+
+```bash
+kubectl cluster-info
+```
+
+```bash
+kubectl get nodes
+```
+
+👉 Output:
+
+```
+minikube   Ready
+```
+
+---
+
+# =========================
+
+# ✅ PART C — DEPLOY APP
+
+# =========================
+
+---
+
+## 📦 Step 1: Create Deployment
+
+```bash
+kubectl create deployment myapp --image=nginx
+```
+
+---
+
+## 🔍 Step 2: Check Pods
+
+```bash
+kubectl get pods
+```
+
+👉 Wait until:
+
+```
+STATUS: Running
+```
+
+---
+
+## 🌐 Step 3: Expose Service
+
+```bash
+kubectl expose deployment myapp --type=NodePort --port=80
+```
+
+---
+
+## 🌍 Step 4: Access in Browser
+
+```bash
+minikube service myapp
+```
+
+👉 Browser will open automatically ✔
+
+---
+
+## ✅ Step 5: Verify Setup
+
+```bash
+kubectl get services
+kubectl get pods
+kubectl get deployments
+```
+
+👉 Everything should be:
+
+```
+Running / Active
+```
+
+---
+
+# =========================
+
+# ✅ PART D — SCALING
+
+# =========================
+
+---
+
+## 📈 Step 1: Scale Application
+
+```bash
+kubectl scale deployment myapp --replicas=3
+```
+
+---
+
+## 🔍 Verify Scaling
+
+```bash
+kubectl get pods
+```
+
+👉 Output:
+
+```
+3 pods running
+```
+
