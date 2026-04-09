@@ -309,12 +309,209 @@ git log --oneline --graph
 🎯 WORKFLOW DIAGRAM (WRITE IF ASKED)
 main → create feature → develop → merge → delet
 
-💾 STEP 7 — Commit Again
+✅ PRACTICAL 6
+🔧 Ansible Inventory + Ad-hoc Commands
+🎯 AIM
+Create inventory file
+Run commands without playbook
+📁 STEP 1 — Go to folder
+cd ~/ansible-practical
+📄 STEP 2 — Create Inventory
+nano inventory
+
+👉 Add:
+
+localhost ansible_connection=local
+
+Save → CTRL + X → Y → Enter
+
+🔍 STEP 3 — Test Connection
+ansible localhost -i inventory -m ping
+
+👉 Output:
+
+localhost | SUCCESS => pong
+⚡ STEP 4 — Run Ad-hoc Commands
+✔ Check system info
+ansible localhost -i inventory -m command -a "uname -a"
+✔ Check disk space
+ansible localhost -i inventory -m command -a "df -h"
+✔ Install package (IMPORTANT)
+ansible localhost -i inventory -m apt -a "name=tree state=present" --become --ask-become-pass
+✔ Start service
+ansible localhost -i inventory -m service -a "name=apache2 state=started" --become --ask-become-pass
+✔ Create file
+ansible localhost -i inventory -m file -a "path=/tmp/test.txt state=touch"
+
+
+✅ PRACTICAL 7
+🔧 Git Stash, Rebase, Log
+🎯 AIM
+Save temporary changes (stash)
+Rebase commits
+View history
+📁 STEP 1 — Create Repo
+mkdir git-advanced
+cd git-advanced
+git init
+📄 STEP 2 — Create File
+echo "Line 1" > file.txt
 git add .
-git add file.txt
-git commit -m "Added file.txt"
+git commit -m "First commit"
+✏️ STEP 3 — Modify File (DON’T COMMIT)
+echo "Temporary change" >> file.txt
+📦 STEP 4 — Use STASH
+git stash
+
+👉 Saves changes & clears working directory
+
+🔍 Check stash
+git stash list
+🔄 Restore stash
+git stash apply
+❌ Remove stash
+git stash drop
+🌿 STEP 5 — Create Branch
+git checkout -b feature
+✏️ STEP 6 — Add commit in feature
+echo "Feature work" >> file.txt
+git add .
+git commit -m "Feature commit"
+🔙 STEP 7 — Switch to master
+git checkout master
+🔀 STEP 8 — Rebase feature branch
+git checkout feature
+git rebase master
+
+👉 Moves feature commits on top of master
+
+📊 STEP 9 — View Log
+git log --oneline
+🔥 Graph view (IMPORTANT)
+git log --oneline --graph --all
+
+✅ PRACTICAL 8
+🔧 Automate Application Deployment using Ansible
+🎯 AIM
+
+Deploy a simple web app using Ansible
+
+📁 STEP 1 — Go to folder
+cd ~/ansible-practical
+📄 STEP 2 — Create Playbook
+nano deploy.yml
+✍️ WRITE THIS
+---
+- name: Deploy web application
+  hosts: localhost
+  become: yes
+
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Start Apache
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
+    - name: Deploy web page
+      copy:
+        content: "<h1>Deployed using Ansible</h1>"
+        dest: /var/www/html/index.html
+▶️ STEP 3 — Run
+ansible-playbook -i inventory deploy.yml --ask-become-pass
+🌐 STEP 4 — Verify
+http://localhost
+
+✅ PRACTICAL 9
+🔧 Configure Jenkins + Freestyle Job
+🎯 AIM
+Install Jenkins
+Create job
+Build project
+⚙️ STEP 1 — Install Jenkins
+sudo apt update
+sudo apt install openjdk-11-jdk -y
+wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt update
+sudo apt install jenkins -y
+▶️ STEP 2 — Start Jenkins
+sudo systemctl start jenkins
+🌐 STEP 3 — Open Jenkins
+http://localhost:8080
+🔑 STEP 4 — Unlock Jenkins
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+👉 Paste password in browser
+
+⚙️ STEP 5 — Create Freestyle Job
+Click New Item
+Enter name → demo-job
+Select → Freestyle Project
+⚙️ STEP 6 — Add Build Step
+
+👉 In Build Section → Execute Shell
+
+echo "Hello from Jenkins"
+▶️ STEP 7 — Build
+
+👉 Click:
+
+Build Now
+
+👉 Check:
+
+Console Output
 
 
-📄 STEP 3 — Create / Modify File
-echo "First change" > file.txt
+✅ PRACTICAL 11
+🔧 Jenkins Pipeline (Declarative)
+🎯 AIM
 
+Automate build using pipeline
+
+📄 STEP 1 — Create New Item
+
+👉 In Jenkins:
+
+New Item
+Name: pipeline-job
+Select: Pipeline
+✍️ STEP 2 — Add Pipeline Script
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building project...'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Testing project...'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying project...'
+            }
+        }
+    }
+}
+▶️ STEP 3 — Run Pipeline
+
+Click:
+
+Build Now
+📊 STEP 4 — View Output
+
+👉 Click build → Console Output
